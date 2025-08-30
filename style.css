@@ -13,7 +13,9 @@
     --transition-speed: 0.3s;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -112,20 +114,29 @@ body {
     box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3);
 }
 
-.message, .error-message {
+.message,
+.error-message {
     font-size: 0.9rem;
     margin-top: 1rem;
     height: 1.2em;
     font-weight: 500;
 }
-.error-message, .error { color: var(--danger-color); }
-.success { color: var(--success-color); }
+
+.error-message,
+.error {
+    color: var(--danger-color);
+}
+
+.success {
+    color: var(--success-color);
+}
 
 .toggle-link {
     margin-top: 1.5rem;
     font-size: 0.95rem;
     color: var(--secondary-color);
 }
+
 .toggle-link span {
     color: var(--primary-color);
     cursor: pointer;
@@ -140,7 +151,8 @@ body {
     background: var(--light-color);
     opacity: 0;
     animation: fadeIn 0.5s forwards;
-    animation-delay: 0.2s; /* Delay to make transition smoother */
+    animation-delay: 0.2s;
+    /* Delay to make transition smoother */
 }
 
 .sidebar {
@@ -159,6 +171,7 @@ body {
     border-bottom: 1px solid #495057;
     margin-bottom: 1.5rem;
 }
+
 .sidebar-header h3 {
     font-size: 1.2rem;
 }
@@ -166,6 +179,7 @@ body {
 .sidebar-nav ul {
     list-style: none;
 }
+
 .sidebar-nav li a {
     color: #adb5bd;
     text-decoration: none;
@@ -177,17 +191,19 @@ body {
     margin-bottom: 0.5rem;
     transition: all var(--transition-speed) ease;
 }
+
 .sidebar-nav li a:hover {
     background-color: #343a40;
     color: #ffffff;
 }
+
 .sidebar-nav li.active a {
     background-color: var(--primary-color);
     color: #ffffff;
 }
 
-#logout-btn { 
-    margin-top: auto; 
+#logout-btn {
+    margin-top: auto;
 }
 
 .main-content {
@@ -211,7 +227,10 @@ body {
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
 }
-.permit-form-grid input, .permit-form-grid textarea, .permit-form-grid select {
+
+.permit-form-grid input,
+.permit-form-grid textarea,
+.permit-form-grid select {
     width: 100%;
     padding: 0.8rem 1rem;
     border: 1px solid #ced4da;
@@ -219,8 +238,15 @@ body {
     font-size: 1rem;
     font-family: var(--font-family);
 }
-.readonly-field { background-color: #e9ecef; cursor: not-allowed;}
-.full-width { grid-column: 1 / -1; }
+
+.readonly-field {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
 
 /* Permit Cards Styling */
 #permits-list {
@@ -228,6 +254,7 @@ body {
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 1.5rem;
 }
+
 .permit-card {
     background: #ffffff;
     padding: 1.5rem;
@@ -237,24 +264,47 @@ body {
     transition: all var(--transition-speed) ease;
     animation: slideUp 0.5s ease-out;
 }
+
 .permit-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
-.permit-card h4 { font-size: 1.2rem; margin-bottom: 1rem; }
-.permit-card p { margin-bottom: 0.5rem; color: #495057; }
-.permit-card .close-btn { background-color: var(--success-color); margin-top: 1rem; }
-.permit-card .close-btn:hover { background-color: #157347; box-shadow: 0 4px 10px rgba(25, 135, 84, 0.3); }
+
+.permit-card h4 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.permit-card p {
+    margin-bottom: 0.5rem;
+    color: #495057;
+}
+
+.permit-card .close-btn {
+    background-color: var(--success-color);
+    margin-top: 1rem;
+}
+
+.permit-card .close-btn:hover {
+    background-color: #157347;
+    box-shadow: 0 4px 10px rgba(25, 135, 84, 0.3);
+}
 
 /* Loader */
 .loader-wrapper {
-    position: fixed; top: 0; left: 0;
-    width: 100%; height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background: rgba(255, 255, 255, 0.8);
-    display: flex; justify-content: center; align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     z-index: 9999;
     backdrop-filter: blur(4px);
 }
+
 .loader {
     width: 60px;
     height: 60px;
@@ -265,26 +315,54 @@ body {
 }
 
 /* Animations */
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
 
 /* --- Responsive Design --- */
 @media (max-width: 768px) {
     body {
         align-items: flex-start;
     }
+
     #auth-wrapper {
         padding: 1rem;
     }
+
     .auth-box {
         padding: 1.5rem;
         box-shadow: none;
         border-radius: 0;
     }
+
     #app-container {
         flex-direction: column;
     }
+
     .sidebar {
         width: 100%;
         height: auto;
@@ -294,34 +372,97 @@ body {
         padding: 0.5rem 1rem;
         box-shadow: var(--box-shadow);
     }
+
     .sidebar-header {
         display: none;
     }
+
     .sidebar-nav ul {
         display: flex;
         gap: 0.5rem;
         width: 100%;
         justify-content: center;
     }
+
     .sidebar-nav li {
         flex-grow: 1;
         text-align: center;
     }
+
     .sidebar-nav li a {
         padding: 0.7rem;
         margin-bottom: 0;
         justify-content: center;
     }
+
     #logout-btn {
         margin: 0;
     }
+
     .main-content {
         padding: 1.5rem;
     }
+
     .view h1 {
         font-size: 1.8rem;
     }
+
     .permit-form-grid {
         grid-template-columns: 1fr;
     }
+}
+
+/* --- Footer Styles (Corrected for Mobile) --- */
+footer {
+    text-align: center;
+    padding: 25px 15px;
+    /* Added more vertical padding */
+    margin-top: 40px;
+    /* Increased space from content above */
+    border-top: 1px solid var(--border-color);
+    /* Added a subtle line for separation */
+}
+
+/* This is the main fix for the container */
+.social-icons {
+    display: flex;
+    /* Activates Flexbox */
+    flex-wrap: wrap;
+    /* Allows icons to wrap to the next line */
+    justify-content: center;
+    /* Keeps icons centered horizontally */
+    gap: 20px;
+    /* Modern way to add space between icons */
+    margin-bottom: 15px;
+    /* Adds space between icons and credit text */
+}
+
+.social-icons a {
+    display: inline-block;
+    /* margin is now handled by 'gap', so we can remove it from here */
+    transition: transform 0.3s ease;
+}
+
+.social-icons a:hover {
+    transform: translateY(-4px);
+}
+
+.social-icons svg {
+    width: 32px;
+    height: 32px;
+    fill: #555;
+    transition: fill 0.3s ease;
+}
+
+.social-icons a:hover svg {
+    fill: var(--primary-color);
+}
+
+.footer-credit {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    /* Slightly smaller for a cleaner look */
+    color: #777;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    direction: ltr;
 }
