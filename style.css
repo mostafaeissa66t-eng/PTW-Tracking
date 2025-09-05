@@ -1,4 +1,4 @@
-/* style.css */
+/* style.css (النسخة الكاملة مع تنسيقات الجرس) */
 :root {
     --primary-color: #0d6efd;
     --primary-hover: #0b5ed7;
@@ -6,7 +6,6 @@
     --success-color: #198754;
     --danger-color: #dc3545;
     --warning-color: #ffc107;
-    /* لون جديد للملاحظات */
     --light-color: #f8f9fa;
     --dark-color: #212529;
     --font-family: 'Tajawal', sans-serif;
@@ -39,7 +38,6 @@ body {
     display: none !important;
 }
 
-/* --- Auth Page Styling --- */
 #auth-wrapper {
     width: 100%;
     max-width: 450px;
@@ -144,7 +142,6 @@ body {
     font-weight: 700;
 }
 
-/* --- Main App Interface --- */
 #app-container {
     display: flex;
     width: 100vw;
@@ -248,16 +245,17 @@ body {
     grid-column: 1 / -1;
 }
 
-/* --- Card Styles (Permits & Observations) --- */
 #permits-list,
-#observations-list {
+#observations-list,
+#nearmisses-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 1.5rem;
 }
 
 .permit-card,
-.observation-card {
+.observation-card,
+.nearmiss-card {
     background: #ffffff;
     padding: 1.5rem;
     border-radius: var(--border-radius);
@@ -267,36 +265,40 @@ body {
 }
 
 .permit-card:hover,
-.observation-card:hover {
+.observation-card:hover,
+.nearmiss-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
 .permit-card h4,
-.observation-card h4 {
+.observation-card h4,
+.nearmiss-card h4 {
     font-size: 1.2rem;
     margin-bottom: 1rem;
 }
 
 .permit-card p,
-.observation-card p {
+.observation-card p,
+.nearmiss-card p {
     margin-bottom: 0.5rem;
     color: #495057;
 }
 
 .permit-card .close-btn,
-.observation-card .close-btn {
+.observation-card .close-btn,
+.nearmiss-card .close-btn {
     background-color: var(--success-color);
     margin-top: 1rem;
 }
 
 .permit-card .close-btn:hover,
-.observation-card .close-btn:hover {
+.observation-card .close-btn:hover,
+.nearmiss-card .close-btn:hover {
     background-color: #157347;
     box-shadow: 0 4px 10px rgba(25, 135, 84, 0.3);
 }
 
-/* Card-specific border colors */
 .permit-card {
     border-left: 5px solid var(--primary-color);
 }
@@ -305,7 +307,10 @@ body {
     border-left: 5px solid var(--warning-color);
 }
 
-/* --- Loader & Animations --- */
+.nearmiss-card {
+    border-left: 5px solid var(--danger-color);
+}
+
 .loader-wrapper {
     position: fixed;
     top: 0;
@@ -357,7 +362,6 @@ body {
     }
 }
 
-/* --- Footer & Responsive --- */
 footer {
     text-align: center;
     padding: 25px 15px;
@@ -398,6 +402,110 @@ footer {
     color: #777;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     direction: ltr;
+}
+
+#notification-bell-container {
+    position: fixed;
+    bottom: 25px;
+    left: 25px;
+    width: 60px;
+    height: 60px;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    z-index: 1001;
+}
+
+#notification-bell-container:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-3px);
+}
+
+#notification-bell-icon {
+    width: 28px;
+    height: 28px;
+}
+
+#notification-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: var(--danger-color);
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    border: 2px solid white;
+    transform: scale(0);
+    transition: transform 0.3s ease;
+}
+
+#notification-count:not(.hidden) {
+    transform: scale(1);
+}
+
+#notification-panel {
+    position: fixed;
+    bottom: 100px;
+    left: 25px;
+    width: 350px;
+    max-width: 90vw;
+    max-height: 400px;
+    background-color: #fff;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    z-index: 1000;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transform-origin: bottom left;
+    transform: scale(0.95);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease-out;
+}
+
+#notification-panel.active {
+    transform: scale(1);
+    opacity: 1;
+    visibility: visible;
+}
+
+#notification-panel .panel-header {
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+    font-size: 1.1rem;
+}
+
+#notification-panel #notification-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow-y: auto;
+}
+
+#notification-panel #notification-list li {
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#notification-panel #notification-list li:last-child {
+    border-bottom: none;
 }
 
 @media (max-width: 768px) {
@@ -446,9 +554,19 @@ footer {
     }
 
     .sidebar-nav li a {
-        padding: 0.7rem;
-        margin-bottom: 0;
+        flex-direction: column;
+        /* <-- أهم تغيير: بيخلي الأيقونة فوق النص */
+        gap: 4px;
+        /* بيقلل المسافة بين الأيقونة والنص */
+        font-size: 11px;
+        /* بيصغّر الخط عشان يناسب المساحة */
+        padding: 8px 4px;
+        /* بيظبط الهوامش الداخلية */
         justify-content: center;
+        line-height: 1.2;
+        /* بيحسن شكل الكلام لو نزل على سطرين */
+        text-align: center;
+        /* بيضمن إن الكلام في النص */
     }
 
     #logout-btn {
