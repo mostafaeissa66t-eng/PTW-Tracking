@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HSE System</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
@@ -85,7 +86,8 @@
             </div>
             <nav class="sidebar-nav">
                 <ul>
-                    <li id="nav-new-permit" class="active"><a href="#">📝 إصدار تصريح</a></li>
+                    <li id="nav-dashboard" class="active"><a href="#">📊 لوحة التحكم</a></li>
+                    <li id="nav-new-permit"><a href="#">📝 إصدار تصريح</a></li>
                     <li id="nav-close-permit"><a href="#">📂 إغلاق تصريح</a></li>
                     <li id="nav-new-observation"><a href="#">🗒️ تسجيل ملاحظة</a></li>
                     <li id="nav-close-observation"><a href="#">✔️ إغلاق ملاحظة</a></li>
@@ -97,7 +99,46 @@
         </aside>
 
         <main class="main-content">
-            <div id="new-permit-view" class="view">
+            <div id="dashboard-view" class="view">
+                <h1>لوحة التحكم</h1>
+                <div id="dashboard-loader" class="dashboard-loader-container">
+                    <div class="loader"></div>
+                    <p>جاري تحميل بيانات الداش بورد...</p>
+                </div>
+                <div id="dashboard-content" class="dashboard-grid hidden">
+                    <div class="kpi-card">
+                        <div class="kpi-icon permit">📝</div>
+                        <div class="kpi-text">
+                            <div class="kpi-value" id="kpi-total-permits">0</div>
+                            <div class="kpi-title">إجمالي التصاريح</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon observation">🗒️</div>
+                        <div class="kpi-text">
+                            <div class="kpi-value" id="kpi-total-observations">0</div>
+                            <div class="kpi-title">إجمالي الملاحظات</div>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon nearmiss">⚠️</div>
+                        <div class="kpi-text">
+                            <div class="kpi-value" id="kpi-total-nearmisses">0</div>
+                            <div class="kpi-title">إجمالي الحوادث الوشيكة</div>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <h3>حالة التصاريح</h3>
+                        <canvas id="permitsStatusChart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>أنواع الملاحظات</h3>
+                        <canvas id="observationsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div id="new-permit-view" class="view hidden">
                 <h1>إصدار تصريح عمل جديد</h1>
                 <form id="permit-form" class="permit-form-grid">
                     <input type="text" id="projectName" placeholder="اسم المشروع" required>
@@ -208,7 +249,8 @@
         <div class="loader"></div>
     </div>
 
-    <div id="notification-bell-container" style="display: none;"> <svg id="notification-bell-icon" viewBox="0 0 24 24">
+    <div id="notification-bell-container" style="display: none;">
+        <svg id="notification-bell-icon" viewBox="0 0 24 24">
             <path fill="currentColor"
                 d="M14,20A2,2 0 0,1 12,22A2,2 0 0,1 10,20H14M12,2A1,1 0 0,1 13,3V4.08C15.84,4.56 18,7.03 18,10V16L21,19H3L6,16V10C6,7.03 8.16,4.56 11,4.08V3A1,1 0 0,1 12,2Z" />
         </svg>
