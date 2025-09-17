@@ -1,4 +1,5 @@
-/* style.css (النسخة الكاملة مع تنسيقات الجرس) */
+/* style.css (النسخة الكاملة والمحسّنة للداش بورد) */
+
 :root {
     --primary-color: #0d6efd;
     --primary-hover: #0b5ed7;
@@ -38,6 +39,7 @@ body {
     display: none !important;
 }
 
+/* --- Auth Page Styling --- */
 #auth-wrapper {
     width: 100%;
     max-width: 450px;
@@ -56,7 +58,6 @@ body {
 .auth-box h1 {
     font-size: 2.5rem;
     font-weight: 700;
-    color: var(--dark-color);
     margin-bottom: 0.5rem;
 }
 
@@ -142,6 +143,7 @@ body {
     font-weight: 700;
 }
 
+/* --- Main App Interface --- */
 #app-container {
     display: flex;
     width: 100vw;
@@ -249,7 +251,7 @@ body {
 #observations-list,
 #nearmisses-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 1.5rem;
 }
 
@@ -311,6 +313,80 @@ body {
     border-left: 5px solid var(--danger-color);
 }
 
+/* ==================== Dashboard Styles (Corrected) ==================== */
+.dashboard-grid {
+    display: grid;
+    /* This creates a flexible grid. It will try to fit as many 280px columns as it can. */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    /* <<< This adds space between all cards */
+}
+
+.kpi-card,
+.chart-card {
+    background-color: #fff;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.kpi-card {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.kpi-icon {
+    font-size: 2.5rem;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+}
+
+.kpi-icon.permit {
+    background-color: rgba(13, 110, 253, 0.1);
+    color: var(--primary-color);
+}
+
+.kpi-icon.observation {
+    background-color: rgba(255, 193, 7, 0.1);
+    color: var(--warning-color);
+}
+
+.kpi-icon.nearmiss {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: var(--danger-color);
+}
+
+.kpi-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.kpi-title {
+    font-size: 1rem;
+    color: var(--secondary-color);
+}
+
+.chart-card {
+    /* On large screens, we might want charts to span more space */
+    /* This is a simple setup. For complex layouts, more media queries might be needed */
+    position: relative;
+    min-height: 400px;
+    /* <<< This gives the chart container a minimum height */
+}
+
+.chart-card h3 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+}
+
+/* --- Loader & Animations --- */
 .loader-wrapper {
     position: fixed;
     top: 0;
@@ -362,6 +438,7 @@ body {
     }
 }
 
+/* --- Footer & Notification Bell --- */
 footer {
     text-align: center;
     padding: 25px 15px;
@@ -508,6 +585,7 @@ footer {
     border-bottom: none;
 }
 
+/* --- Responsive Design --- */
 @media (max-width: 768px) {
     body {
         align-items: flex-start;
@@ -555,18 +633,12 @@ footer {
 
     .sidebar-nav li a {
         flex-direction: column;
-        /* <-- أهم تغيير: بيخلي الأيقونة فوق النص */
         gap: 4px;
-        /* بيقلل المسافة بين الأيقونة والنص */
         font-size: 11px;
-        /* بيصغّر الخط عشان يناسب المساحة */
         padding: 8px 4px;
-        /* بيظبط الهوامش الداخلية */
         justify-content: center;
         line-height: 1.2;
-        /* بيحسن شكل الكلام لو نزل على سطرين */
         text-align: center;
-        /* بيضمن إن الكلام في النص */
     }
 
     #logout-btn {
@@ -584,4 +656,20 @@ footer {
     .permit-form-grid {
         grid-template-columns: 1fr;
     }
+}
+
+/* ==================== Dashboard Loader Styles ==================== */
+.dashboard-loader-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px; /* To give it some space */
+    gap: 1.5rem;
+}
+
+.dashboard-loader-container p {
+    font-size: 1.2rem;
+    color: var(--secondary-color);
+    font-weight: 500;
 }
