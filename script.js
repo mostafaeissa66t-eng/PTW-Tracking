@@ -1,11 +1,13 @@
-// script.js (النسخة الكاملة النهائية مع جرس الإشعارات)
+// script.js (النسخة الكاملة مع الداش بورد الإدارية واللودر)
 
 document.addEventListener('DOMContentLoaded', () => {
     // 👈 !!! مهم جدًا: ضع رابط الـ API الجديد هنا
-    const GOOGLE_SCRIPT_API_URL = 'https://script.google.com/macros/s/AKfycbw0QhJM8YukhfzoySz0ANf1fY3-pkbhluPDOxuL1PuBeQPvSMA4Ypn2pZ9vhu_logkoOQ/exec';
+    const GOOGLE_SCRIPT_API_URL = 'https://script.google.com/macros/s/AKfycbz_sf6x6JfDhflibd3AaO2KlOJK9ixM1r7MLmUp3weDb0uzwW4DWOI-HTQpZMTLvvl4zw/exec';
 
     let loggedInUser = null;
-    let notifications = []; // لتخزين الإشعارات
+    let observationsChartInstance = null;
+    let permitsChartInstance = null;
+    let notifications = [];
 
     const DOMElements = {
         authWrapper: document.getElementById('auth-wrapper'), appContainer: document.getElementById('app-container'),
@@ -14,76 +16,25 @@ document.addEventListener('DOMContentLoaded', () => {
         loginForm: document.getElementById('login-form'), registerForm: document.getElementById('register-form'),
         permitForm: document.getElementById('permit-form'), observationForm: document.getElementById('observation-form'),
         nearMissForm: document.getElementById('nearmiss-form'), showRegisterLink: document.getElementById('show-register-link'),
-        showLoginLink: document.getElementById('show-login-link'), navNewPermit: document.getElementById('nav-new-permit'),
-        navClosePermit: document.getElementById('nav-close-permit'), navNewObservation: document.getElementById('nav-new-observation'),
-        navCloseObservation: document.getElementById('nav-close-observation'), navNewNearMiss: document.getElementById('nav-new-nearmiss'),
-        navCloseNearMiss: document.getElementById('nav-close-nearmiss'), logoutBtn: document.getElementById('logout-btn'),
-        loginError: document.getElementById('login-error'), registerMessage: document.getElementById('register-message'),
-        usernameDisplay: document.getElementById('username-display'), issuerField: document.getElementById('issuer'),
-        permitsList: document.getElementById('permits-list'), obsIssuerField: document.getElementById('obsIssuer'),
-        observationsList: document.getElementById('observations-list'), nearMissIssuer: document.getElementById('nearMissIssuer'),
-        nearMissesList: document.getElementById('nearmisses-list'),
+        showLoginLink: document.getElementById('show-login-link'), navDashboard: document.getElementById('nav-dashboard'),
+        navNewPermit: document.getElementById('nav-new-permit'), navClosePermit: document.getElementById('nav-close-permit'),
+        navNewObservation: document.getElementById('nav-new-observation'), navCloseObservation: document.getElementById('nav-close-observation'),
+        navNewNearMiss: document.getElementById('nav-new-nearmiss'), navCloseNearMiss: document.getElementById('nav-close-nearmiss'),
+        logoutBtn: document.getElementById('logout-btn'), loginError: document.getElementById('login-error'),
+        registerMessage: document.getElementById('register-message'), usernameDisplay: document.getElementById('username-display'),
+        issuerField: document.getElementById('issuer'), permitsList: document.getElementById('permits-list'),
+        obsIssuerField: document.getElementById('obsIssuer'), observationsList: document.getElementById('observations-list'),
+        nearMissIssuer: document.getElementById('nearMissIssuer'), nearMissesList: document.getElementById('nearmisses-list'),
         notificationBellContainer: document.getElementById('notification-bell-container'),
         notificationCount: document.getElementById('notification-count'),
         notificationPanel: document.getElementById('notification-panel'),
         notificationList: document.getElementById('notification-list'),
+        dashboardLoader: document.getElementById('dashboard-loader'),
+        dashboardContent: document.getElementById('dashboard-content'),
+        kpiTotalPermits: document.getElementById('kpi-total-permits'),
+        kpiTotalObservations: document.getElementById('kpi-total-observations'),
+        kpiTotalNearMisses: document.getElementById('kpi-total-nearmisses'),
     };
-
-    // --- Notification System ---
-    function updateNotificationUI() {
-        if (notifications.length > 0) {
-            DOMElements.notificationCount.textContent = notifications.length;
-            DOMElements.notificationCount.classList.remove('hidden');
-        } else {
-            DOMElements.notificationCount.classList.add('hidden');
-        }
-        DOMElements.notificationList.innerHTML = '';
-        if (notifications.length === 0) {
-            DOMElements.notificationList.innerHTML = `<li>لا توجد إشعارات جديدة.</li>`;
-            return;
-        }
-        notifications.forEach(notif => {
-            const li = document.createElement('li');
-            li.innerHTML = `<span>${notif.icon}</span> <span>${notif.message}</span>`;
-            DOMElements.notificationList.appendChild(li);
-        });
-    }
-
-    async function checkNotifications() {
-        if (!loggedInUser) return;
-        const data = await apiCall({ action: "getAllOpenItems", username: loggedInUser }, false);
-        if (!data.success) return;
-        const now = new Date().getTime();
-        const EIGHT_HOURS_IN_MS = 8 * 60 * 60 * 1000;
-        const THREE_DAYS_IN_MS = 3 * 24 * 60 * 60 * 1000;
-        let newNotificationsFound = false;
-
-        if (data.permits) {
-            data.permits.forEach(permit => {
-                if (now - permit.creationTime > EIGHT_HOURS_IN_MS) {
-                    const id = `permit_${permit.id}`;
-                    if (!notifications.some(n => n.id === id)) {
-                        notifications.push({ id, message: `تنبيه: تصريح #${permit.id} مفتوح لأكثر من 8 ساعات.`, icon: '📝' });
-                        newNotificationsFound = true;
-                    }
-                }
-            });
-        }
-        if (data.observations) {
-            data.observations.forEach(obs => {
-                if (now - obs.creationTime > THREE_DAYS_IN_MS) {
-                    const id = `obs_${obs.id}`;
-                    if (!notifications.some(n => n.id === id)) {
-                        notifications.push({ id, message: `تنبيه: ملاحظة #${obs.id} مفتوحة لأكثر من 3 أيام.`, icon: '🗒️' });
-                        newNotificationsFound = true;
-                    }
-                }
-            });
-        }
-        if (newNotificationsFound) {
-            updateNotificationUI();
-        }
-    }
 
     async function apiCall(body, showLoaderFlag = true) {
         if (showLoaderFlag) showLoader(true);
@@ -99,6 +50,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (showLoaderFlag) showLoader(false);
         }
     }
+    function updateNotificationUI() { if (notifications.length > 0) { DOMElements.notificationCount.textContent = notifications.length; DOMElements.notificationCount.classList.remove('hidden'); } else { DOMElements.notificationCount.classList.add('hidden'); } DOMElements.notificationList.innerHTML = ''; if (notifications.length === 0) { DOMElements.notificationList.innerHTML = `<li>لا توجد إشعارات جديدة.</li>`; return; } notifications.forEach(notif => { const li = document.createElement('li'); li.innerHTML = `<span>${notif.icon}</span> <span>${notif.message}</span>`; DOMElements.notificationList.appendChild(li); }); }
+    async function checkNotifications() { if (!loggedInUser) return; const data = await apiCall({ action: "getAllOpenItems", username: loggedInUser }, false); if (!data.success) return; const now = new Date().getTime(); const EIGHT_HOURS_IN_MS = 8 * 60 * 60 * 1000; const THREE_DAYS_IN_MS = 3 * 24 * 60 * 60 * 1000; let newNotificationsFound = false; if (data.permits) { data.permits.forEach(permit => { if (now - permit.creationTime > EIGHT_HOURS_IN_MS) { const id = `permit_${permit.id}`; if (!notifications.some(n => n.id === id)) { notifications.push({ id, message: `تنبيه: تصريح #${permit.id} مفتوح لأكثر من 8 ساعات.`, icon: '📝' }); newNotificationsFound = true; } } }); } if (data.observations) { data.observations.forEach(obs => { if (now - obs.creationTime > THREE_DAYS_IN_MS) { const id = `obs_${obs.id}`; if (!notifications.some(n => n.id === id)) { notifications.push({ id, message: `تنبيه: ملاحظة #${obs.id} مفتوحة لأكثر من 3 أيام.`, icon: '🗒️' }); newNotificationsFound = true; } } }); } if (newNotificationsFound) { updateNotificationUI(); } }
 
     // --- Event Listeners ---
     DOMElements.loginForm.addEventListener('submit', handleLogin);
@@ -108,6 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
     DOMElements.nearMissForm.addEventListener('submit', handleNewNearMiss);
     DOMElements.showRegisterLink.addEventListener('click', () => toggleAuthView(false));
     DOMElements.showLoginLink.addEventListener('click', () => toggleAuthView(true));
+    DOMElements.navDashboard.addEventListener('click', () => showView('dashboard-view'));
     DOMElements.navNewPermit.addEventListener('click', () => showView('new-permit-view'));
     DOMElements.navClosePermit.addEventListener('click', () => showView('close-permit-view'));
     DOMElements.navNewObservation.addEventListener('click', () => showView('new-observation-view'));
@@ -120,7 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
     DOMElements.observationsList.addEventListener('click', (e) => { if (e.target.classList.contains('close-btn')) { handleCloseObservation(e.target.getAttribute('data-observation-id')); } });
     DOMElements.nearMissesList.addEventListener('click', (e) => { if (e.target.classList.contains('close-btn')) { handleCloseNearMiss(e.target.getAttribute('data-nearmiss-id')); } });
 
-    // --- Functions ---
     const showLoader = (isLoading) => DOMElements.loader.classList.toggle('hidden', !isLoading);
     const toggleAuthView = (showLogin) => { DOMElements.loginContainer.classList.toggle('hidden', !showLogin); DOMElements.registerContainer.classList.toggle('hidden', showLogin); };
 
@@ -128,17 +81,38 @@ document.addEventListener('DOMContentLoaded', () => {
         DOMElements.views.forEach(view => view.classList.add('hidden'));
         document.getElementById(viewId).classList.remove('hidden');
         document.querySelectorAll('.sidebar-nav li').forEach(li => li.classList.remove('active'));
-        switch (viewId) {
-            case 'new-permit-view': DOMElements.navNewPermit.classList.add('active'); break;
-            case 'close-permit-view': DOMElements.navClosePermit.classList.add('active'); loadUserPermits(); break;
-            case 'new-observation-view': DOMElements.navNewObservation.classList.add('active'); DOMElements.obsIssuerField.value = `الملاحظ: ${loggedInUser}`; break;
-            case 'close-observation-view': DOMElements.navCloseObservation.classList.add('active'); loadUserObservations(); break;
-            case 'new-nearmiss-view': DOMElements.navNewNearMiss.classList.add('active'); DOMElements.nearMissIssuer.value = `المُبلغ: ${loggedInUser}`; break;
-            case 'close-nearmiss-view': DOMElements.navCloseNearMiss.classList.add('active'); loadUserOpenNearMisses(); break;
-        }
+        const activeNav = document.getElementById(`nav-${viewId.split('-')[0]}`);
+        if (activeNav) activeNav.classList.add('active');
+
+        if (viewId === 'dashboard-view') loadDashboard();
+        else if (viewId === 'close-permit-view') loadUserPermits();
+        else if (viewId === 'new-observation-view') DOMElements.obsIssuerField.value = `الملاحظ: ${loggedInUser}`;
+        else if (viewId === 'close-observation-view') loadUserObservations();
+        else if (viewId === 'new-nearmiss-view') DOMElements.nearMissIssuer.value = `المُبلغ: ${loggedInUser}`;
+        else if (viewId === 'close-nearmiss-view') loadUserOpenNearMisses();
     }
 
-    async function handleLogin(e) { e.preventDefault(); DOMElements.loginError.textContent = ''; const data = await apiCall({ action: "login", username: DOMElements.loginForm.elements.username.value, password: DOMElements.loginForm.elements.password.value }); if (data.success) { loggedInUser = data.user; DOMElements.authWrapper.classList.add('hidden'); DOMElements.appContainer.classList.remove('hidden'); DOMElements.notificationBellContainer.style.display = 'flex'; DOMElements.usernameDisplay.textContent = loggedInUser; DOMElements.issuerField.value = `مصدر التصريح: ${loggedInUser}`; showView('new-permit-view'); notifications = []; updateNotificationUI(); setTimeout(checkNotifications, 2000); setInterval(checkNotifications, 15 * 60 * 1000); } else { DOMElements.loginError.textContent = data.message; } }
+    async function loadDashboard() {
+        DOMElements.dashboardLoader.classList.remove('hidden');
+        DOMElements.dashboardContent.classList.add('hidden');
+        const data = await apiCall({ action: "getDashboardData" }, false);
+        if (data.success) {
+            const d = data.data;
+            DOMElements.kpiTotalPermits.textContent = d.kpi.totalPermits;
+            DOMElements.kpiTotalObservations.textContent = d.kpi.totalObservations;
+            DOMElements.kpiTotalNearMisses.textContent = d.kpi.totalNearMisses;
+            const permitCtx = document.getElementById('permitsStatusChart').getContext('2d');
+            if (permitsChartInstance) permitsChartInstance.destroy();
+            permitsChartInstance = new Chart(permitCtx, { type: 'pie', data: { labels: ['مفتوح', 'مغلق'], datasets: [{ data: [d.charts.permitsByStatus.Open, d.charts.permitsByStatus.Closed], backgroundColor: ['rgba(255, 159, 64, 0.8)', 'rgba(75, 192, 192, 0.8)'], borderColor: '#fff', borderWidth: 2 }] }, options: { responsive: true, plugins: { legend: { position: 'top' } } } });
+            const obsCtx = document.getElementById('observationsChart').getContext('2d');
+            if (observationsChartInstance) observationsChartInstance.destroy();
+            observationsChartInstance = new Chart(obsCtx, { type: 'doughnut', data: { labels: Object.keys(d.charts.observationsByType), datasets: [{ data: Object.values(d.charts.observationsByType), backgroundColor: ['rgba(255, 99, 132, 0.8)', 'rgba(255, 206, 86, 0.8)', 'rgba(54, 162, 235, 0.8)'], borderColor: '#fff', borderWidth: 2 }] }, options: { responsive: true, plugins: { legend: { position: 'top' } } } });
+        }
+        DOMElements.dashboardLoader.classList.add('hidden');
+        DOMElements.dashboardContent.classList.remove('hidden');
+    }
+
+    async function handleLogin(e) { e.preventDefault(); DOMElements.loginError.textContent = ''; const data = await apiCall({ action: "login", username: DOMElements.loginForm.elements.username.value, password: DOMElements.loginForm.elements.password.value }); if (data.success) { loggedInUser = data.user; DOMElements.authWrapper.classList.add('hidden'); DOMElements.appContainer.classList.remove('hidden'); DOMElements.notificationBellContainer.style.display = 'flex'; DOMElements.usernameDisplay.textContent = loggedInUser; showView('dashboard-view'); notifications = []; updateNotificationUI(); setTimeout(checkNotifications, 2000); setInterval(checkNotifications, 15 * 60 * 1000); } else { DOMElements.loginError.textContent = data.message; } }
     async function handleRegistration(e) { e.preventDefault(); const p1 = DOMElements.registerForm.elements['reg-password'].value; const p2 = DOMElements.registerForm.elements['reg-confirm-password'].value; if (p1 !== p2) { DOMElements.registerMessage.textContent = 'كلمتا المرور غير متطابقتين.'; return; } const data = await apiCall({ action: "register", userData: { username: DOMElements.registerForm.elements['reg-username'].value, email: DOMElements.registerForm.elements['reg-email'].value, password: p1 } }); DOMElements.registerMessage.textContent = data.message; if (data.success) { DOMElements.registerForm.reset(); setTimeout(() => toggleAuthView(true), 2000); } }
     async function handleNewPermit(e) { e.preventDefault(); if (!confirm('هل أنت متأكد من إصدار هذا التصريح؟')) return; const data = await apiCall({ action: "createPermit", permitData: { projectName: DOMElements.permitForm.elements.projectName.value, permitType: DOMElements.permitForm.elements.permitType.value, shift: DOMElements.permitForm.elements.shift.value, requester: DOMElements.permitForm.elements.requester.value, siteEngineer: DOMElements.permitForm.elements.siteEngineer.value, subcontractorName: DOMElements.permitForm.elements.subcontractorName.value, workLocation: DOMElements.permitForm.elements.workLocation.value, workersCount: DOMElements.permitForm.elements.workersCount.value, description: DOMElements.permitForm.elements.description.value, issuer: loggedInUser } }); alert(data.message); if (data.success) { DOMElements.permitForm.reset(); DOMElements.issuerField.value = `مصدر التصريح: ${loggedInUser}`; } }
     async function loadUserPermits() { DOMElements.permitsList.innerHTML = '<p>جاري التحميل...</p>'; const data = await apiCall({ action: "getUserPermits", username: loggedInUser }); if (data.success) { DOMElements.permitsList.innerHTML = ''; if (data.permits.length === 0) { DOMElements.permitsList.innerHTML = '<p>لا يوجد تصاريح مفتوحة.</p>'; return; } data.permits.forEach(p => { const card = document.createElement('div'); card.className = 'permit-card'; card.innerHTML = `<h4>${p.projectName} (ID: ${p.id})</h4><p><strong>الموقع:</strong> ${p.location}</p><p><strong>تاريخ الإصدار:</strong> ${p.permitDate}</p><p><strong>الوصف:</strong> ${p.description}</p><button class="btn close-btn" data-permit-id="${p.id}">✅ إغلاق التصريح</button>`; DOMElements.permitsList.appendChild(card); }); } }
