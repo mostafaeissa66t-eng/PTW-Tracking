@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الإبلاغ عن خطر</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div id="public-hazard-wrapper">
+        <div class="auth-box public-report-card">
+            <h1>🚨</h1>
+            <h2>الإبلاغ عن خطر/مخالفة عامة</h2>
+            <p class="subtitle">يرجى إدخال البيانات بأكبر قدر من الدقة لضمان معالجة سريعة.</p>
+
+            <form id="public-hazard-form">
+
+                <div class="input-group">
+                    <label for="p-hazard-name">اسم المُبلِّغ:</label>
+                    <input type="text" id="p-hazard-name" name="reporterName" placeholder="اختياري، للمتابعة"
+                        autocomplete="name">
+                </div>
+                <div class="input-group">
+                    <label for="p-hazard-dept">القسم/الجهة التابع لها:</label>
+                    <input type="text" id="p-hazard-dept" name="department" placeholder="يرجى إدخال القسم يدوياً"
+                        required autocomplete="organization">
+                </div>
+
+                <div class="input-group">
+                    <label for="p-hazard-location">الموقع الفعلي للخطورة:</label>
+                    <input type="text" id="p-hazard-location" name="location" placeholder="مثال: قطاع C، الدور الثالث"
+                        required>
+                </div>
+
+                <div class="input-group">
+                    <label for="p-hazard-type">نوع المخاطر المتعلقة:</label>
+                    <select id="p-hazard-type" name="hazardType" required>
+                        <option value="" disabled selected>اختر نوع المخاطر</option>
+                        <option value="التعثر والسقوط">التعثر والسقوط</option>
+                        <option value="السقوط من على ارتفاعات">السقوط من على ارتفاعات</option>
+                        <option value="حريق">حريق</option>
+                        <option value="انفجار">انفجار</option>
+                        <option value="صعق كهربى">صعق كهربى</option>
+                        <option value="اختناق">اختناق</option>
+                        <option value="اجهاد حرارى">إجهاد حراري</option>
+                        <option value="انهيار الحفر">انهيار الحفر</option>
+                        <option value="انقلاب معدة">انقلاب مُعدَّة</option>
+                        <option value="التعرض للمواد الكيميائية">التعرض للمواد الكيميائية</option>
+                        <option value="اخرى">أخرى</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="p-hazard-description">وصف الخطورة بالتفصيل:</label>
+                    <textarea id="p-hazard-description" name="description" rows="5" placeholder="صف بدقة ما رأيته"
+                        required></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label for="p-hazard-solution">الحلول المقترحة منك (اختياري):</label>
+                    <textarea id="p-hazard-solution" name="proposedSolution" rows="3"
+                        placeholder="إذا كان لديك حل مقترح"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label for="p-hazard-image">رفع صورة (اختياري):</label>
+                    <input type="file" id="p-hazard-image" name="imageFile" accept="image/*">
+                </div>
+
+                <button type="submit" class="btn">إرسال تقرير الخطورة</button>
+                <p id="public-report-message" class="message"></p>
+            </form>
+
+            <p class="toggle-link">
+                <a href="index.html" class="btn secondary-btn" id="p-hazard-back-btn"
+                    style="width: 100%; margin-top: 15px;">العودة لصفحة تسجيل الدخول (للموظفين)</a>
+            </p>
+        </div>
+    </div>
+
+    <div id="loader" class="loader-wrapper hidden">
+        <div class="loader"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
