@@ -1,4 +1,4 @@
-/* style.css (النسخة الكاملة والمحسّنة للداش بورد) */
+/* style.css (النسخة النهائية والمصححة بالكامل) */
 
 :root {
     --primary-color: #0d6efd;
@@ -9,6 +9,7 @@
     --warning-color: #ffc107;
     --light-color: #f8f9fa;
     --dark-color: #212529;
+    --info-color: #0dcaf0;
     --font-family: 'Tajawal', sans-serif;
     --border-radius: 0.375rem;
     --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
@@ -74,7 +75,9 @@ body {
     text-align: right;
 }
 
-.input-group input {
+.input-group input,
+.input-group textarea,
+.input-group select {
     width: 100%;
     padding: 0.8rem 1rem;
     border: 1px solid #ced4da;
@@ -84,10 +87,20 @@ body {
     transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
 }
 
-.input-group input:focus {
+.input-group input:focus,
+.input-group textarea:focus,
+.input-group select:focus {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--dark-color);
+    font-size: 0.95rem;
 }
 
 .btn {
@@ -112,6 +125,16 @@ body {
     background-color: var(--primary-hover);
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3);
+}
+
+.secondary-btn {
+    background-color: var(--secondary-color);
+    margin-top: 10px;
+}
+
+.secondary-btn:hover {
+    background-color: #5c636a;
+    box-shadow: 0 4px 10px rgba(108, 117, 125, 0.3);
 }
 
 .message,
@@ -143,6 +166,7 @@ body {
     font-weight: 700;
 }
 
+
 /* --- Main App Interface --- */
 #app-container {
     display: flex;
@@ -154,6 +178,7 @@ body {
     animation-delay: 0.2s;
 }
 
+/* ⭐ تنسيق القائمة الجانبية (Default - Desktop) */
 .sidebar {
     width: 260px;
     background: var(--dark-color);
@@ -161,7 +186,7 @@ body {
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
-    transition: margin-right var(--transition-speed) ease;
+    transition: right 0.3s ease-in-out;
 }
 
 .sidebar-header {
@@ -179,16 +204,22 @@ body {
     list-style: none;
 }
 
+.sidebar-nav li {
+    margin-bottom: 8px;
+}
+
 .sidebar-nav li a {
     color: #adb5bd;
     text-decoration: none;
     display: flex;
     align-items: center;
-    gap: 0.8rem;
-    padding: 0.9rem 1rem;
+    gap: 0.5rem;
+    padding: 0.6rem 0.6rem;
     border-radius: var(--border-radius);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0;
     transition: all var(--transition-speed) ease;
+    font-size: 0.9rem;
+    font-weight: 500;
 }
 
 .sidebar-nav li a:hover {
@@ -204,6 +235,16 @@ body {
 #logout-btn {
     margin-top: auto;
 }
+
+#logout-btn a {
+    color: var(--danger-color);
+    font-weight: 700;
+}
+
+#logout-btn:hover a {
+    color: #ffffff;
+}
+
 
 .main-content {
     flex-grow: 1;
@@ -247,9 +288,12 @@ body {
     grid-column: 1 / -1;
 }
 
+
+/* --- Lists (Permits/Observations/Reports) --- */
 #permits-list,
 #observations-list,
-#nearmisses-list {
+#nearmisses-list,
+#hazard-reports-list {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 1.5rem;
@@ -257,7 +301,8 @@ body {
 
 .permit-card,
 .observation-card,
-.nearmiss-card {
+.nearmiss-card,
+.report-card {
     background: #ffffff;
     padding: 1.5rem;
     border-radius: var(--border-radius);
@@ -268,37 +313,43 @@ body {
 
 .permit-card:hover,
 .observation-card:hover,
-.nearmiss-card:hover {
+.nearmiss-card:hover,
+.report-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
 .permit-card h4,
 .observation-card h4,
-.nearmiss-card h4 {
+.nearmiss-card h4,
+.report-card h4 {
     font-size: 1.2rem;
     margin-bottom: 1rem;
 }
 
 .permit-card p,
 .observation-card p,
-.nearmiss-card p {
+.nearmiss-card p,
+.report-card p {
     margin-bottom: 0.5rem;
     color: #495057;
 }
 
 .permit-card .close-btn,
 .observation-card .close-btn,
-.nearmiss-card .close-btn {
+.nearmiss-card .close-btn,
+.report-card .close-btn {
     background-color: var(--success-color);
     margin-top: 1rem;
+    width: 100%;
 }
 
-.permit-card .close-btn:hover,
-.observation-card .close-btn:hover,
-.nearmiss-card .close-btn:hover {
-    background-color: #157347;
-    box-shadow: 0 4px 10px rgba(25, 135, 84, 0.3);
+.report-card .close-btn {
+    background-color: var(--danger-color);
+}
+
+.report-card .close-btn:hover {
+    background-color: #a02836;
 }
 
 .permit-card {
@@ -313,27 +364,32 @@ body {
     border-left: 5px solid var(--danger-color);
 }
 
-/* ==================== Dashboard Styles (Corrected) ==================== */
-.dashboard-grid {
-    display: grid;
-    /* This creates a flexible grid. It will try to fit as many 280px columns as it can. */
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-    /* <<< This adds space between all cards */
+.report-card {
+    border-left: 5px solid var(--info-color);
 }
 
-.kpi-card,
-.chart-card {
-    background-color: #fff;
-    padding: 1.5rem;
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
+
+/* ==================== Dashboard Styles (Charts & KPIs) ==================== */
+/* ⭐ التعديل الرئيسي: تطبيق grid على الصفوف المنفصلة */
+.kpi-row,
+.charts-row {
+    /* تجعل البطاقات تتكيف في صف واحد */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    /* فصل صف KPIs عن صف Charts */
+    width: 100%;
 }
 
 .kpi-card {
     display: flex;
     align-items: center;
     gap: 1.5rem;
+    background-color: #fff;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
 }
 
 .kpi-icon {
@@ -346,6 +402,7 @@ body {
     border-radius: 50%;
 }
 
+/* ⭐ تنسيقات الأيقونات الأساسية */
 .kpi-icon.permit {
     background-color: rgba(13, 110, 253, 0.1);
     color: var(--primary-color);
@@ -361,6 +418,17 @@ body {
     color: var(--danger-color);
 }
 
+/* ⭐ تنسيق KPIs الجديدة */
+.kpi-icon.info {
+    background-color: rgba(13, 110, 253, 0.1);
+    color: var(--info-color);
+}
+
+.kpi-icon.success {
+    background-color: rgba(25, 135, 84, 0.1);
+    color: var(--success-color);
+}
+
 .kpi-value {
     font-size: 2.5rem;
     font-weight: 700;
@@ -373,11 +441,32 @@ body {
 }
 
 .chart-card {
-    /* On large screens, we might want charts to span more space */
-    /* This is a simple setup. For complex layouts, more media queries might be needed */
+    background-color: #fff;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
     position: relative;
-    min-height: 400px;
-    /* <<< This gives the chart container a minimum height */
+
+    /* ⭐ تثبيت الأبعاد في وضع الكمبيوتر */
+    min-height: 520px;
+    height: 520px;
+
+    /* ⭐ هام: التحكم في التمدد الداخلي (حل مشكلة الخروج من الحاوية) */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    /* يضمن عدم خروج المحتوى */
+}
+
+.chart-card canvas {
+    /* ⭐ أهم تصحيح: لضمان أن الرسم لا يتجاوز الحاوية ويحافظ على أبعاده */
+    display: block;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    width: 100% !important;
+    height: auto !important;
+    flex-grow: 1;
+    /* لتمكين الـ canvas من التمدد لملء الفراغ الرأسي */
 }
 
 .chart-card h3 {
@@ -386,7 +475,23 @@ body {
     font-weight: 500;
 }
 
-/* --- Loader & Animations --- */
+
+/* --- Public Hazard Report Styling --- */
+#public-hazard-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 20px;
+    background-color: var(--light-color);
+    width: 100%;
+}
+
+.public-report-card {
+    max-width: 650px;
+}
+
+/* ==================== Loader & Animations --- */
 .loader-wrapper {
     position: fixed;
     top: 0;
@@ -438,11 +543,13 @@ body {
     }
 }
 
-/* --- Footer & Notification Bell --- */
+
+/* --- Footer Styling (مصحح) --- */
 footer {
     text-align: center;
     padding: 25px 15px;
     margin-top: 40px;
+    width: 100%;
 }
 
 .social-icons {
@@ -481,195 +588,125 @@ footer {
     direction: ltr;
 }
 
-#notification-bell-container {
-    position: fixed;
-    bottom: 25px;
-    left: 25px;
-    width: 60px;
-    height: 60px;
-    background-color: var(--primary-color);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
-    z-index: 1001;
+
+/* --- Responsive Design (مصحح) --- */
+
+.hidden-desktop {
+    display: none;
 }
 
-#notification-bell-container:hover {
-    background-color: var(--primary-hover);
-    transform: translateY(-3px);
-}
-
-#notification-bell-icon {
-    width: 28px;
-    height: 28px;
-}
-
-#notification-count {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background-color: var(--danger-color);
-    color: white;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 0.8rem;
-    font-weight: 700;
-    border: 2px solid white;
-    transform: scale(0);
-    transition: transform 0.3s ease;
-}
-
-#notification-count:not(.hidden) {
-    transform: scale(1);
-}
-
-#notification-panel {
-    position: fixed;
-    bottom: 100px;
-    left: 25px;
-    width: 350px;
-    max-width: 90vw;
-    max-height: 400px;
-    background-color: #fff;
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-    z-index: 1000;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    transform-origin: bottom left;
-    transform: scale(0.95);
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.2s ease-out;
-}
-
-#notification-panel.active {
-    transform: scale(1);
-    opacity: 1;
-    visibility: visible;
-}
-
-#notification-panel .panel-header {
-    padding: 1rem;
-    border-bottom: 1px solid #eee;
-    font-size: 1.1rem;
-}
-
-#notification-panel #notification-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    overflow-y: auto;
-}
-
-#notification-panel #notification-list li {
-    padding: 1rem;
-    border-bottom: 1px solid #eee;
-    font-size: 0.95rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-#notification-panel #notification-list li:last-child {
-    border-bottom: none;
-}
-
-/* --- Responsive Design --- */
 @media (max-width: 768px) {
+
+    /* ⭐ إظهار زر القائمة في وضع الجوال */
+    .hidden-desktop {
+        display: block;
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        z-index: 1000;
+        padding: 10px 15px;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        font-size: 1.2rem;
+        box-shadow: var(--box-shadow);
+    }
+
     body {
         align-items: flex-start;
-    }
-
-    #auth-wrapper {
-        padding: 1rem;
-    }
-
-    .auth-box {
-        padding: 1.5rem;
-        box-shadow: none;
-        border-radius: 0;
+        overflow-x: hidden;
     }
 
     #app-container {
         flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+        width: 100%;
     }
 
+    /* ⭐ القائمة الجانبية تتحول إلى قائمة منزلقة (Off-Canvas) */
     .sidebar {
-        width: 100%;
-        height: auto;
-        flex-direction: row;
-        justify-content: space-around;
-        align-items: center;
-        padding: 0.5rem 1rem;
-        box-shadow: var(--box-shadow);
+        position: fixed;
+        top: 0;
+        right: -300px;
+        width: 280px;
+        height: 100%;
+        padding: 1.5rem;
+        z-index: 999;
+        flex-direction: column;
+        transition: right 0.3s ease-in-out;
+        box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
+        overflow-y: auto;
+    }
+
+    .sidebar.active {
+        right: 0;
     }
 
     .sidebar-header {
-        display: none;
+        display: block;
+        text-align: center;
     }
 
     .sidebar-nav ul {
-        display: flex;
-        gap: 0.5rem;
-        width: 100%;
-        justify-content: center;
-    }
-
-    .sidebar-nav li {
-        flex-grow: 1;
-        text-align: center;
-    }
-
-    .sidebar-nav li a {
-        flex-direction: column;
-        gap: 4px;
-        font-size: 11px;
-        padding: 8px 4px;
-        justify-content: center;
-        line-height: 1.2;
-        text-align: center;
-    }
-
-    #logout-btn {
+        display: block;
+        list-style: none;
+        padding: 0;
         margin: 0;
     }
 
-    .main-content {
-        padding: 1.5rem;
+    .sidebar-nav li {
+        margin-bottom: 5px;
+        width: 100%;
+        max-width: none;
+        text-align: right;
     }
 
-    .view h1 {
-        font-size: 1.8rem;
+    .sidebar-nav li a {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.8rem;
+        padding: 10px 15px;
+        font-size: 1rem;
+        white-space: normal;
+    }
+
+    /* ⭐ تصحيح مساحة المحتوى الرئيسية لترك مساحة لزر القائمة */
+    .main-content {
+        padding: 1.5rem 1.5rem 1.5rem 60px;
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+    /* ⭐ تصحيح لوحة التحكم على الجوال */
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        /* جعل كل بطاقة تأخذ سطرًا كاملاً في وضع الجوال */
+    }
+
+    .kpi-card {
+        padding: 1rem;
+    }
+
+    .kpi-value {
+        font-size: 2rem;
+    }
+
+    .chart-card {
+        grid-column: 1 / -1;
+        /* الرسوم البيانية تأخذ سطرًا كاملاً أيضاً */
+        height: 380px;
+        min-height: 380px;
     }
 
     .permit-form-grid {
         grid-template-columns: 1fr;
     }
-}
 
-/* ==================== Dashboard Loader Styles ==================== */
-.dashboard-loader-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 400px; /* To give it some space */
-    gap: 1.5rem;
-}
-
-.dashboard-loader-container p {
-    font-size: 1.2rem;
-    color: var(--secondary-color);
-    font-weight: 500;
+    footer {
+        margin-top: 20px;
+    }
 }
