@@ -20,10 +20,14 @@
                 <h1>👷‍♂️</h1>
                 <h2>HSE System</h2>
                 <form id="login-form">
-                    <div class="input-group"><input type="text" id="username" name="username" placeholder="اسم المستخدم"
-                            required></div>
-                    <div class="input-group"><input type="password" id="password" name="password"
-                            placeholder="كلمة المرور" required></div>
+                    <div class="input-group">
+                        <input type="text" id="username" name="username" placeholder="اسم المستخدم" required
+                            autocomplete="username">
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="password" name="password" placeholder="كلمة المرور" required
+                            autocomplete="current-password">
+                    </div>
                     <button type="submit" class="btn">تسجيل الدخول</button>
                     <p id="login-error" class="error-message"></p>
                 </form>
@@ -49,14 +53,22 @@
                 <h1>👷‍♂️</h1>
                 <h2>HSE System - إنشاء حساب</h2>
                 <form id="register-form">
-                    <div class="input-group"><input type="text" id="reg-username" placeholder="اختر اسم مستخدم"
-                            required></div>
-                    <div class="input-group"><input type="email" id="reg-email" placeholder="البريد الإلكتروني"
-                            required></div>
-                    <div class="input-group"><input type="password" id="reg-password" placeholder="كلمة المرور"
-                            required></div>
-                    <div class="input-group"><input type="password" id="reg-confirm-password"
-                            placeholder="تأكيد كلمة المرور" required></div>
+                    <div class="input-group">
+                        <input type="text" id="reg-username" placeholder="اختر اسم مستخدم" required
+                            autocomplete="username">
+                    </div>
+                    <div class="input-group">
+                        <input type="email" id="reg-email" placeholder="البريد الإلكتروني" required
+                            autocomplete="email">
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="reg-password" placeholder="كلمة المرور" required
+                            autocomplete="new-password">
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="reg-confirm-password" placeholder="تأكيد كلمة المرور" required
+                            autocomplete="new-password">
+                    </div>
                     <button type="submit" class="btn">إنشاء الحساب</button>
                     <p id="register-message" class="message"></p>
                 </form>
@@ -93,10 +105,16 @@
                     <li id="nav-close-observation"><a href="#">✔️ إغلاق ملاحظة</a></li>
                     <li id="nav-new-nearmiss"><a href="#">⚠️ تسجيل حادث وشيك</a></li>
                     <li id="nav-close-nearmiss"><a href="#">❕ إغلاق حادث وشيك</a></li>
+                    <li id="nav-new-public-report"><a href="#">📢 إبلاغ عن خطر (عام)</a></li>
+                    <li id="nav-close-hazard">
+                        <a href="#">❌ إغلاق تقارير الخطورة</a>
+                    </li>
                     <li id="logout-btn"><a href="#">🚪 خروج</a></li>
                 </ul>
             </nav>
         </aside>
+
+        <button id="menu-toggle" class="hidden-desktop">☰</button>
 
         <main class="main-content">
             <div id="dashboard-view" class="view">
@@ -105,35 +123,57 @@
                     <div class="loader"></div>
                     <p>جاري تحميل بيانات الداش بورد...</p>
                 </div>
-                <div id="dashboard-content" class="dashboard-grid hidden">
-                    <div class="kpi-card">
-                        <div class="kpi-icon permit">📝</div>
-                        <div class="kpi-text">
-                            <div class="kpi-value" id="kpi-total-permits">0</div>
-                            <div class="kpi-title">إجمالي التصاريح</div>
+
+                <div id="dashboard-content" class="hidden">
+
+                    <div class="kpi-row dashboard-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-icon permit">📝</div>
+                            <div class="kpi-text">
+                                <div class="kpi-value" id="kpi-total-permits">0</div>
+                                <div class="kpi-title">إجمالي التصاريح</div>
+                            </div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-icon observation">🗒️</div>
+                            <div class="kpi-text">
+                                <div class="kpi-value" id="kpi-total-observations">0</div>
+                                <div class="kpi-title">إجمالي الملاحظات</div>
+                            </div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-icon nearmiss">⚠️</div>
+                            <div class="kpi-text">
+                                <div class="kpi-value" id="kpi-total-nearmisses">0</div>
+                                <div class="kpi-title">إجمالي الحوادث الوشيكة</div>
+                            </div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-icon info">📢</div>
+                            <div class="kpi-text">
+                                <div class="kpi-value" id="kpi-open-hazards">0</div>
+                                <div class="kpi-title">الخطورة المفتوحة</div>
+                            </div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-icon success">✅</div>
+                            <div class="kpi-text">
+                                <div class="kpi-value" id="kpi-closed-hazards">0</div>
+                                <div class="kpi-title">الخطورة المغلقة</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="kpi-card">
-                        <div class="kpi-icon observation">🗒️</div>
-                        <div class="kpi-text">
-                            <div class="kpi-value" id="kpi-total-observations">0</div>
-                            <div class="kpi-title">إجمالي الملاحظات</div>
+
+                    <div class="charts-row dashboard-grid">
+                        <div class="chart-card">
+                            <h3>حالة التصاريح</h3>
+                            <canvas id="permitsStatusChart"></canvas>
                         </div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-icon nearmiss">⚠️</div>
-                        <div class="kpi-text">
-                            <div class="kpi-value" id="kpi-total-nearmisses">0</div>
-                            <div class="kpi-title">إجمالي الحوادث الوشيكة</div>
+                        <div class="chart-card">
+                            <h3>أنواع الملاحظات</h3>
+                            <canvas id="observationsChart"></canvas>
                         </div>
-                    </div>
-                    <div class="chart-card">
-                        <h3>حالة التصاريح</h3>
-                        <canvas id="permitsStatusChart"></canvas>
-                    </div>
-                    <div class="chart-card">
-                        <h3>أنواع الملاحظات</h3>
-                        <canvas id="observationsChart"></canvas>
+
                     </div>
                 </div>
             </div>
@@ -141,8 +181,8 @@
             <div id="new-permit-view" class="view hidden">
                 <h1>إصدار تصريح عمل جديد</h1>
                 <form id="permit-form" class="permit-form-grid">
-                    <input type="text" id="projectName" placeholder="اسم المشروع" required>
-                    <select id="permitType" required>
+                    <input type="text" id="projectName" name="projectName" placeholder="اسم المشروع" required>
+                    <select id="permitType" name="permitType" required>
                         <option value="">اختر نوع التصريح...</option>
                         <option value="عمل على البارد">عمل على البارد</option>
                         <option value="عمل على الساخن">عمل على الساخن</option>
@@ -150,19 +190,19 @@
                         <option value="عمل على ارتفاع">عمل على ارتفاع</option>
                         <option value="رفع وتصبين">رفع وتصبين</option>
                     </select>
-                    <select id="shift" required>
+                    <select id="shift" name="shift" required>
                         <option value="">اختر الشيفت...</option>
                         <option value="صباحي">صباحي</option>
                         <option value="مسائي">مسائي</option>
                     </select>
-                    <input type="text" id="requester" placeholder="الجهة الطالبة" required>
-                    <input type="text" id="siteEngineer" placeholder="مهندس الموقع" required>
-                    <input type="text" id="subcontractorName" placeholder="اسم مقاول الباطن">
-                    <input type="text" id="workLocation" placeholder="مكان العمل بالتحديد" required>
-                    <input type="number" id="workersCount" placeholder="عدد العمال" required>
-                    <textarea id="description" placeholder="وصف تفصيلي للعمل" rows="5" required
+                    <input type="text" id="requester" name="requester" placeholder="الجهة الطالبة" required>
+                    <input type="text" id="siteEngineer" name="siteEngineer" placeholder="مهندس الموقع" required>
+                    <input type="text" id="subcontractorName" name="subcontractorName" placeholder="اسم مقاول الباطن">
+                    <input type="text" id="workLocation" name="workLocation" placeholder="مكان العمل بالتحديد" required>
+                    <input type="number" id="workersCount" name="workersCount" placeholder="عدد العمال" required>
+                    <textarea id="description" name="description" placeholder="وصف تفصيلي للعمل" rows="5" required
                         class="full-width"></textarea>
-                    <input type="text" id="issuer" readonly class="readonly-field full-width">
+                    <input type="text" id="issuer" name="issuer" readonly class="readonly-field full-width">
                     <button type="submit" class="btn full-width">إصدار التصريح الآن</button>
                 </form>
             </div>
@@ -175,19 +215,19 @@
             <div id="new-observation-view" class="view hidden">
                 <h1>تسجيل كارت ملاحظة جديد</h1>
                 <form id="observation-form" class="permit-form-grid">
-                    <input type="text" id="obsProjectName" placeholder="اسم المشروع" required>
-                    <input type="text" id="obsLocation" placeholder="مكان الملاحظة" required>
-                    <select id="obsType" required>
+                    <input type="text" id="obsProjectName" name="obsProjectName" placeholder="اسم المشروع" required>
+                    <input type="text" id="obsLocation" name="obsLocation" placeholder="مكان الملاحظة" required>
+                    <select id="obsType" name="obsType" required>
                         <option value="">اختر نوع الملاحظة...</option>
                         <option value="Unsafe Act">Unsafe Act</option>
                         <option value="Unsafe Condition">Unsafe Condition</option>
                         <option value="Environmental Impact">Environmental Impact</option>
                     </select>
-                    <textarea id="obsDescription" placeholder="وصف المخالفة/الملاحظة" rows="5" required
-                        class="full-width"></textarea>
-                    <textarea id="obsCorrectiveAction" placeholder="الإجراء التصحيحي المتخذ" rows="3" required
-                        class="full-width"></textarea>
-                    <input type="text" id="obsIssuer" readonly class="readonly-field full-width">
+                    <textarea id="obsDescription" name="obsDescription" placeholder="وصف المخالفة/الملاحظة" rows="5"
+                        required class="full-width"></textarea>
+                    <textarea id="obsCorrectiveAction" name="obsCorrectiveAction" placeholder="الإجراء التصحيحي المتخذ"
+                        rows="3" required class="full-width"></textarea>
+                    <input type="text" id="obsIssuer" name="obsIssuer" readonly class="readonly-field full-width">
                     <button type="submit" class="btn full-width">تسجيل الملاحظة</button>
                 </form>
             </div>
@@ -218,7 +258,8 @@
                         class="full-width"></textarea>
                     <textarea name="actionTaken" placeholder="الإجراء الفوري المتخذ" rows="3" required
                         class="full-width"></textarea>
-                    <input type="text" id="nearMissIssuer" readonly class="readonly-field full-width">
+                    <input type="text" id="nearMissIssuer" name="nearMissIssuer" readonly
+                        class="readonly-field full-width">
                     <button type="submit" class="btn full-width">تسجيل التقرير</button>
                 </form>
             </div>
@@ -226,6 +267,13 @@
             <div id="close-nearmiss-view" class="view hidden">
                 <h1>قائمة تقارير الحوادث الوشيكة المفتوحة</h1>
                 <div id="nearmisses-list"></div>
+            </div>
+
+            <div id="close-hazard-view" class="view hidden">
+                <h1>قائمة تقارير الخطورة العامة المفتوحة للمراجعة</h1>
+                <div id="hazard-reports-list">
+                    <p>جاري تحميل التقارير المفتوحة...</p>
+                </div>
             </div>
 
             <footer>
